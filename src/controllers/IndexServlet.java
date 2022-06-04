@@ -19,7 +19,7 @@ import utils.DBUtil;
 public class IndexServlet extends HttpServlet {
         private static final long serialVersionUID = 1L;
 
-    
+
     public IndexServlet() {
         super();
         // TODO Auto-generated constructor stub
@@ -36,6 +36,14 @@ public class IndexServlet extends HttpServlet {
             em.close();
 
             request.setAttribute("messages",messages);
+
+            //フラッシュメッセージがセッションスコープにセットされていたら
+            //リクエストスコープに保存する（セッションスコープからは削除)
+            if(request.getSession().getAttribute("flush") != null) {
+                request.setAttribute("flush",request.getSession().getAttribute("flush"));
+                request.getSession().removeAttribute("flush");
+            }
+
              RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/messages/index.jsp");
              rd.forward(request, response);
 
